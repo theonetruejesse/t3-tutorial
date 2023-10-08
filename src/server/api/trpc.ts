@@ -49,7 +49,8 @@ const createInnerTRPCContext = ({ auth }: AuthContext) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+// typically async, changed for eslint-check vercel-deployment reasons; make sure change does not impact anything
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
   return createInnerTRPCContext({ auth: getAuth(opts.req) });
 };
 
