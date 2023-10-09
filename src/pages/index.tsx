@@ -9,6 +9,8 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import { UnwrapPromise } from "@prisma/client/runtime/library";
+import { useState, useEffect } from "react";
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
@@ -29,7 +31,7 @@ const CreatePostWizard = () => {
   );
 };
 
-type PostWithUser = RouterOutputs["posts"]["getAll"][number];
+type PostWithUser = UnwrapPromise<RouterOutputs["posts"]["getAll"][number]>;
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
 
@@ -44,6 +46,9 @@ const PostView = (props: PostWithUser) => {
         alt={`${author.username} profile picture`}
         height={48}
         width={48}
+        // probably implemented wrong, but yolo
+        placeholder="blur"
+        blurDataURL={author.blurredUrl}
       />
       <div className="flex flex-col self-center">
         <div className="flex gap-2 text-sm text-slate-300">
@@ -61,7 +66,6 @@ const PostView = (props: PostWithUser) => {
 
 const Home: NextPage = () => {
   const user = useUser();
-  console.log(user);
 
   const { data, isLoading } = api.posts.getAll.useQuery();
 
